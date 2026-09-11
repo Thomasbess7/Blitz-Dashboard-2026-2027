@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blitz Franchise — Live Dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  /* ── Brand palette: dark turquoise background, teal/cyan accents (darkened pass) ── */
+  --teal:#10a0c4;--teal-dark:#001922;--teal-light:#7dd8ef;
+  --orange:#00ccff;
+  --bg:#00272f;--bg2:#013240;--bg3:#01404f;
+  --card:#013642;
+  --border:rgba(16,160,196,0.14);--border2:rgba(16,160,196,0.24);
+  --text:#eef9fb;--text2:#8fc7d6;--text3:#487e90;
+  /* ── Service / status colours — unchanged, kept for icons & categories ── */
+  --green:#1BC700;--purple:#7f77dd;--gold:#e8b84b;
+  --c-sale:#FFE500;--c-consult:#4ea8de;--c-rsf:#9b7be8;--c-inc:#1BC700;--c-other:#aecacd;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);}
+body{font-family:'Barlow',system-ui,sans-serif;}
+.wrap{width:1920px;height:1080px;display:flex;flex-direction:column;overflow:hidden;}
+.hdr{background:linear-gradient(135deg,var(--teal-dark) 0%,#001c24 60%,var(--bg) 100%);display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:22vh;flex-shrink:0;border-bottom:3px solid rgba(255,255,255,0.3);position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 120%,rgba(0,204,255,0.10) 0%,transparent 70%);pointer-events:none;}
+.hdr-left{display:flex;align-items:center;gap:16px;flex-shrink:0;z-index:1;}
+.logo-box{height:72px;width:72px;border-radius:14px;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 0 28px rgba(0,204,255,0.5);}
+.hdr-title{font-size:28px;font-weight:800;color:#fff;letter-spacing:1px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;}
+.hdr-live{display:flex;align-items:center;gap:8px;margin-top:6px;}
+.live-dot{width:11px;height:11px;border-radius:50%;background:#ff3b3b;animation:pu 1.2s infinite;flex-shrink:0;box-shadow:0 0 10px rgba(255,59,59,0.8);}
+@keyframes pu{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.7)}}
+.hdr-live-txt{font-size:15px;color:var(--text2);font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
+.hdr-metrics{display:flex;gap:14px;align-items:center;flex:1;justify-content:center;z-index:1;}
+.hmc{background:rgba(255,255,255,0.05);border:1px solid var(--border2);border-radius:16px;padding:0 20px;width:210px;height:120px;flex-shrink:0;position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;}
+.hmc::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 100%);pointer-events:none;}
+.hmc-icon-box{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,255,255,0.1);}
+.hmc-icon-box i{font-size:30px;}
+.hmc-content{display:flex;flex-direction:column;align-items:flex-start;}
+.hmc-label{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:800;}
+.hmc-val{font-size:52px;font-weight:800;color:#fff;line-height:1;font-family:'Barlow Condensed',sans-serif;}
+.hmc-sub{font-size:12px;color:var(--text2);margin-top:4px;font-weight:500;}
+.hmc.orange{border-color:rgba(255,0,0,0.6);background:rgba(255,0,0,0.12);border-width:1.5px;}
+.hmc.orange .hmc-val{color:#FF0000;}
+.hmc.orange .hmc-icon-box{background:rgba(255,0,0,0.18);}
+.hmc.blue-card{border-color:rgba(78,168,222,0.6);background:rgba(78,168,222,0.1);border-width:1.5px;}
+.hmc.blue-card .hmc-val{color:var(--c-consult);}
+.hmc.blue-card .hmc-icon-box{background:rgba(78,168,222,0.15);}
+.hmc.green-card{border-color:rgba(29,188,138,0.5);background:rgba(27,199,0,0.1);border-width:1.5px;}
+.hmc.green-card .hmc-val{color:var(--green);font-size:40px;}
+.hmc.green-card .hmc-icon-box{background:rgba(27,199,0,0.12);}
+.hmc.eur-card{border-color:rgba(0,204,255,0.6);background:rgba(0,204,255,0.10);border-width:1.5px;}
+.hmc.eur-card .hmc-val{color:var(--orange);font-size:40px;}
+.hmc.eur-card .hmc-icon-box{background:rgba(0,204,255,0.18);}
+.hmc.sale-card{border-color:rgba(255,229,0,0.6);background:rgba(255,229,0,0.1);border-width:1.5px;}
+.hmc.sale-card .hmc-val{color:#FFE500;}
+.hmc.sale-card .hmc-icon-box{background:rgba(255,229,0,0.15);}
+.hmc.gauge-card{border-color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.08);border-width:1.5px;}
+.hmc.gauge-card .hmc-icon-box{background:rgba(255,255,255,0.1);}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;z-index:1;}
+.last-update{font-size:13px;color:var(--text3);}
+.last-update span{color:var(--text);font-weight:700;}
+.refresh-pill{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);border-radius:10px;padding:6px 13px;font-size:13px;color:var(--text2);font-weight:600;}
+.refresh-pill i{font-size:15px;color:#fff;}
+.month-select{background:rgba(255,255,255,0.08);border:1px solid var(--border2);border-radius:10px;padding:8px 14px;color:#fff;font-size:14px;font-family:inherit;cursor:pointer;outline:none;}
+.month-select option{background:var(--bg);color:#fff;}
+.body{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:10px;padding:10px 20px 12px;flex:1;min-height:0;}
+.panel-hdr{padding:6px 16px;background:linear-gradient(135deg,var(--teal-dark),#001c24);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid var(--border2);}
+.panel-title{font-size:15px;font-weight:700;color:#fff;display:flex;align-items:center;gap:7px;}
+.panel-title i{font-size:18px;color:#fff;}
+.panel-badge{font-size:13px;color:var(--text3);background:rgba(255,255,255,0.06);padding:4px 12px;border-radius:20px;border:0.5px solid var(--border);}
+.charts-col{display:flex;flex-direction:column;gap:10px;min-height:0;}
+.chart-card{background:var(--card);border:1px solid var(--border2);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0;}
+.chart-body{flex:1;padding:10px 14px 12px;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.donut-wrap{position:relative;flex-shrink:0;}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+.donut-center-row{display:flex;align-items:baseline;gap:6px;}
+.donut-center-val{font-size:18px;font-weight:800;color:#fff;font-family:'Barlow Condensed',sans-serif;line-height:1;}
+.donut-center-lbl{font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-top:1px;}
+.donut-legend{display:flex;flex-direction:column;gap:5px;flex:1;justify-content:center;}
+.legend-row{display:flex;align-items:center;gap:6px;}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.legend-name{flex:1;font-size:12px;font-weight:400;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.legend-pct{font-size:12px;color:var(--text3);font-weight:700;font-family:'Barlow Condensed',sans-serif;min-width:28px;text-align:right;}
+.legend-val{font-size:12px;color:var(--text);font-weight:700;font-family:'Barlow Condensed',sans-serif;min-width:52px;text-align:right;}
+.bar-list{display:flex;flex-direction:column;gap:6px;overflow:hidden;}
+.bar-item-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
+.bar-brand{font-size:15px;font-weight:400;color:var(--text);font-family:'Barlow Condensed',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:62%;}
+.bar-val{font-size:15px;font-weight:800;color:var(--green);font-family:'Barlow Condensed',sans-serif;line-height:1.15;}
+.feed-card{background:var(--card);border:2px solid rgba(0,204,255,0.35);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 0 30px rgba(0,204,255,0.10);}
+.feed-thead{display:grid;grid-template-columns:56px 1fr 130px 1fr 100px 120px;gap:14px;padding:7px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);flex-shrink:0;}
+.feed-th{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;font-weight:700;}
+/* feed-scroll now supports native manual scroll; auto-scroll driven by JS and paused on hover */
+.feed-scroll{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+.feed-scroll::-webkit-scrollbar{width:6px;}
+.feed-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+.feed-scroll-inner{padding:8px 10px;display:flex;flex-direction:column;gap:7px;}
+.feed-row{display:grid;grid-template-columns:56px 1fr 130px 1fr 100px 120px;align-items:center;gap:16px;padding:12px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;border-left:4px solid var(--border);flex-shrink:0;transition:background .2s;}
+.feed-row.type-sale{border-left-color:var(--c-sale);background:rgba(245,197,24,0.10);}
+.feed-row.type-consult{border-left-color:var(--c-consult);background:rgba(78,168,222,0.10);}
+.feed-row.type-rsf{border-left-color:var(--c-rsf);background:rgba(155,123,232,0.10);}
+.feed-row.type-inc{border-left-color:var(--c-inc);background:rgba(67,217,140,0.10);}
+.feed-row:hover{background:rgba(255,255,255,0.06);}
+.feed-row.new-row{animation:newRow 1s ease;}
+@keyframes newRow{0%{background:rgba(0,204,255,0.18);}100%{background:var(--bg3);}}
+.feed-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.feed-icon i{font-size:17px;}
+.feed-icon.sale{background:rgba(245,197,24,0.15);}
+.feed-icon.consult{background:rgba(78,168,222,0.15);}
+.feed-icon.rsf{background:rgba(155,123,232,0.15);}
+.feed-icon.inc{background:rgba(67,217,140,0.15);}
+.feed-rep{font-size:26px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Barlow Condensed',sans-serif;}
+.feed-cell{font-size:21px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Barlow Condensed',sans-serif;}
+.feed-svc{font-size:17px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;font-family:'Barlow Condensed',sans-serif;}
+.feed-svc.sale{color:var(--c-sale);}
+.feed-svc.consult{color:var(--c-consult);}
+.feed-svc.rsf{color:var(--c-rsf);}
+.feed-svc.inc{color:var(--c-inc);}
+.feed-amt{font-size:32px;font-weight:800;text-align:right;font-family:'Barlow Condensed',sans-serif;}
+.feed-amt.sale{color:var(--c-sale);}
+.feed-amt.consult{color:var(--c-consult);}
+.feed-amt.rsf{color:var(--c-rsf);}
+.feed-amt.inc{color:var(--c-inc);}
+.lb-card{background:var(--card);border:1px solid var(--border2);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;}
+.lb-body{flex:1;display:flex;flex-direction:column;min-height:0;}
+.lb-block{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;}
+.lb-block:first-child{border-bottom:2px solid var(--border2);}
+.lb-block-title{padding:3px 10px;background:rgba(255,255,255,0.03);border-bottom:0.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;gap:5px;}
+.lb-block-lbl{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;}
+.lb-block-lbl.orange{color:#fff;}
+.lb-block-lbl.teal{color:var(--teal-light);}
+.lb-cols{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0;overflow:hidden;}
+.lb-cols.three-col{grid-template-columns:0.9fr 1fr 1fr;}
+.lb-col{display:flex;flex-direction:column;overflow:hidden;}
+.lb-col:not(:last-child){border-right:1px solid var(--border2);}
+.lb-col-hdr{padding:2px 8px;background:rgba(255,255,255,0.02);border-bottom:0.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:3px;}
+.lb-col-lbl{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.6px;}
+.lb-rows{flex:1;overflow:hidden;padding:2px 0;display:flex;flex-direction:column;}
+.lb-row{display:flex;align-items:center;gap:4px;padding:2px 8px;border-bottom:0.5px solid var(--border);flex-shrink:0;}
+.lb-row.rank-1{background:rgba(232,184,75,0.12);border-left:3px solid #e8b84b;}
+.lb-row.rank-2{background:rgba(192,192,192,0.08);border-left:3px solid #aaa;}
+.lb-row.rank-3{background:rgba(205,127,50,0.08);border-left:3px solid #cd7f32;}
+.lb-row:last-child{border-bottom:none;}
+.lb-row:hover{background:rgba(255,255,255,0.03);}
+.lb-name{flex:1;font-size:16px;font-weight:400;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'Barlow Condensed',sans-serif;}
+.lb-val{font-size:15px;font-weight:800;font-family:'Barlow Condensed',sans-serif;text-align:right;line-height:1.15;}
+.lb-val.gold{color:var(--gold);}
+.lb-val.green{color:var(--green);}
+.lb-val.def{color:var(--text);}
+.deal-flash{position:fixed;inset:0;z-index:997;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s ease;}
+.deal-flash.show{opacity:1;}
+.deal-flash-bg{position:absolute;inset:0;background:linear-gradient(135deg,#001c24 0%,#000f14 50%,#000 100%);}
+.deal-flash.show .deal-flash-bg{animation:flashPulse .5s ease;}
+@keyframes flashPulse{0%{opacity:0}40%{opacity:1}100%{opacity:1}}
+.deal-flash-border{position:absolute;inset:0;border:6px solid var(--orange);animation:borderGlow 1s ease infinite alternate;}
+@keyframes borderGlow{from{box-shadow:inset 0 0 60px rgba(0,204,255,.2),0 0 60px rgba(0,204,255,.2);}to{box-shadow:inset 0 0 120px rgba(0,204,255,.5),0 0 120px rgba(0,204,255,.5);}}
+.deal-flash-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;transform:scale(.8);transition:transform .5s cubic-bezier(.22,1,.36,1);}
+.deal-flash.show .deal-flash-content{transform:scale(1);}
+.flash-label{font-size:16px;font-weight:800;letter-spacing:4px;text-transform:uppercase;color:var(--orange);display:flex;align-items:center;gap:10px;}
+.flash-label i{font-size:24px;}
+.flash-rep{font-size:96px;font-weight:800;color:#fff;line-height:1;font-family:'Barlow Condensed',sans-serif;}
+.flash-brand{font-size:30px;color:var(--teal-light);font-weight:500;}
+.flash-amt{font-size:112px;font-weight:800;color:var(--orange);line-height:1;font-family:'Barlow Condensed',sans-serif;}
+.flash-div{font-size:20px;color:var(--text3);letter-spacing:3px;text-transform:uppercase;margin-top:4px;}
+.confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:998;overflow:hidden;}
+.confetti-piece{position:absolute;top:-12px;border-radius:2px;animation:confettiFall linear forwards;}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1;}100%{transform:translateY(105vh) rotate(720deg);opacity:0;}}
+.overlay{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:500;}
+.spinner{width:48px;height:48px;border:3px solid rgba(169,217,230,0.3);border-top-color:var(--orange);border-radius:50%;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-txt{font-size:17px;color:var(--text2);font-weight:600;}
+.err-box{background:rgba(255,91,5,0.1);border:1px solid rgba(255,91,5,0.3);border-radius:12px;padding:16px 22px;font-size:14px;color:#ffb899;max-width:420px;text-align:center;line-height:1.7;}
+.empty-msg{padding:14px;text-align:center;color:var(--text3);font-size:13px;}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay"><img id="loading-logo" src="" style="height:440px;width:auto;object-fit:contain;display:none;margin-bottom:16px;" alt="Blitz Franchise"><div class="spinner"></div><div class="loading-txt" id="loading-txt">Connecting to Google Sheets...</div></div>
+<div class="confetti-wrap" id="confetti-wrap"></div>
+<div class="deal-flash" id="deal-flash">
+  <div class="deal-flash-bg"></div><div class="deal-flash-border"></div>
+  <div class="deal-flash-content">
+    <div class="flash-label"><i class="ti ti-trophy"></i> New Franchise Closed! <i class="ti ti-trophy"></i></div>
+    <div class="flash-rep" id="flash-rep">—</div>
+    <div class="flash-brand" id="flash-brand"></div>
+    <div class="flash-amt" id="flash-amt">—</div>
+    <div class="flash-div" id="flash-div"></div>
+    <img id="flash-logo" style="height:120px;width:auto;object-fit:contain;margin-top:10px;display:none;filter:drop-shadow(0 0 16px rgba(255,255,255,0.3));" alt="">
+  </div>
+</div>
+<div id="tv-wrap" class="wrap">
+  <div class="hdr">
+    <div class="hdr-left">
+      <img id="blitz-logo" src="" style="height:120px;width:auto;object-fit:contain;filter:drop-shadow(0 0 14px rgba(0,204,255,0.35));display:none;" alt="Blitz Franchise">
+      <div><div class="hdr-live" style="margin-top:0;"><div class="live-dot"></div><span class="hdr-live-txt">Live Dashboard</span></div></div>
+    </div>
+    <div class="hdr-metrics">
+      <div class="hmc sale-card">
+        <div class="hmc-icon-box"><i class="ti ti-bolt" style="color:#FFE500"></i></div>
+        <div class="hmc-content"><div class="hmc-label">Deals Closed</div><div class="hmc-val" id="m-deals">—</div><div class="hmc-sub" id="m-deals-sub">franchises</div></div>
+      </div>
+      <div class="hmc orange" id="card-objective">
+        <div class="hmc-icon-box"><i class="ti ti-target" style="color:#FF0000"></i></div>
+        <div class="hmc-content"><div class="hmc-label">Objective</div><div class="hmc-val" id="m-obj">25</div><div class="hmc-sub" id="m-obj-sub">0% of target</div></div>
+      </div>
+      <div class="hmc gauge-card" id="card-completion">
+        <div style="position:relative;width:80px;height:80px;flex-shrink:0;">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="7"/>
+            <circle id="gauge-circle" cx="40" cy="40" r="32" fill="none" stroke="#fff" stroke-width="7" stroke-dasharray="201.1" stroke-dashoffset="201.1" stroke-linecap="round" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset 1s ease;"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+            <span id="gauge-pct" style="font-size:20px;font-weight:800;color:#fff;font-family:'Barlow Condensed',sans-serif;line-height:1;">0%</span>
+          </div>
+        </div>
+        <div class="hmc-content">
+          <div class="hmc-label">Completion</div>
+          <div id="m-pace-sub" style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px;"></div>
+        </div>
+      </div>
+      <div class="hmc sale-card" id="card-deals-cad" style="display:none;">
+        <div class="hmc-icon-box"><i class="ti ti-bolt" style="color:#FFE500"></i></div>
+        <div class="hmc-content"><div class="hmc-label">Deals Closed (CAD)</div><div class="hmc-val" id="m-deals-cad">—</div><div class="hmc-sub">franchises</div></div>
+      </div>
+      <div class="hmc sale-card" id="card-deals-eur" style="display:none;">
+        <div class="hmc-icon-box"><i class="ti ti-bolt" style="color:#FFE500"></i></div>
+        <div class="hmc-content"><div class="hmc-label">Deals Closed (EUR)</div><div class="hmc-val" id="m-deals-eur">—</div><div class="hmc-sub">franchises</div></div>
+      </div>
+      <div class="hmc blue-card">
+        <div class="hmc-icon-box"><i class="ti ti-file-description" style="color:var(--c-consult)"></i></div>
+        <div class="hmc-content"><div class="hmc-label">Consulting Gigs</div><div class="hmc-val" id="m-consult">—</div><div class="hmc-sub" id="m-consult-sub">new mandates</div></div>
+      </div>
+      <div class="hmc green-card">
+        <div class="hmc-icon-box"><i class="ti ti-currency-dollar" style="color:var(--green)"></i></div>
+        <div class="hmc-content"><div class="hmc-label">Revenue (CAD)</div><div class="hmc-val" id="m-rev-cad">—</div><div class="hmc-sub" id="m-rev-cad-sub">this month</div></div>
+      </div>
+      <div class="hmc green-card">
+        <div class="hmc-icon-box"><i class="ti ti-currency-euro" style="color:var(--green)"></i></div>
+        <div class="hmc-content"><div class="hmc-label">Revenue (EUR)</div><div class="hmc-val" id="m-rev-eur">—</div><div class="hmc-sub" id="m-rev-eur-sub">this month</div></div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="last-update">Last update <span id="last-update-time">—</span></div>
+      <div class="refresh-pill"><i class="ti ti-refresh"></i><span id="refresh-txt">Refresh in 30s</span></div>
+      <select class="month-select" id="month-select" onchange="onMonthChange()">
+        <option value="ALL">All Months</option>
+        <option value="September 2026">September 2026</option>
+        <option value="October 2026">October 2026</option>
+        <option value="November 2026">November 2026</option>
+        <option value="December 2026">December 2026</option>
+        <option value="January 2027">January 2027</option>
+        <option value="February 2027">February 2027</option>
+        <option value="March 2027">March 2027</option>
+        <option value="April 2027">April 2027</option>
+        <option value="May 2027">May 2027</option>
+        <option value="June 2027">June 2027</option>
+        <option value="July 2027">July 2027</option>
+        <option value="August 2027">August 2027</option>
+      </select>
+    </div>
+  </div>
+  <div class="body">
+    <div class="charts-col">
+      <!-- CLOCKS -->
+      <div style="display:flex;flex-direction:row;gap:8px;width:100%;flex-shrink:0;">
+        <div style="flex:1;min-width:0;background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+          <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--teal-light);">Québec</div>
+          <div id="clock-qc" style="font-size:30px;font-weight:800;color:#fff;font-family:'Barlow Condensed',sans-serif;line-height:1;letter-spacing:2px;">—</div>
+          <div id="clock-qc-date" style="font-size:11px;color:var(--text3);font-weight:500;"></div>
+        </div>
+        <div style="flex:1;min-width:0;background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+          <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--teal-light);">Toronto</div>
+          <div id="clock-to" style="font-size:30px;font-weight:800;color:#fff;font-family:'Barlow Condensed',sans-serif;line-height:1;letter-spacing:2px;">—</div>
+          <div id="clock-to-date" style="font-size:11px;color:var(--text3);font-weight:500;"></div>
+        </div>
+        <div style="flex:1;min-width:0;background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+          <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--teal-light);">Ireland</div>
+          <div id="clock-ie" style="font-size:30px;font-weight:800;color:#fff;font-family:'Barlow Condensed',sans-serif;line-height:1;letter-spacing:2px;">—</div>
+          <div id="clock-ie-date" style="font-size:11px;color:var(--text3);font-weight:500;"></div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="panel-hdr"><div class="panel-title"><i class="ti ti-chart-donut"></i> Revenue by Service</div></div>
+        <div class="chart-body" style="flex-direction:row;gap:0;padding:0;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 8px 10px 12px;gap:8px;border-right:2px solid var(--border2);">
+            <div style="display:flex;align-items:center;gap:6px;align-self:flex-start;"><div style="width:8px;height:8px;border-radius:50%;background:#fff;"></div><span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#fff;">This Month</span></div>
+            <div class="donut-wrap"><svg id="donut-month-svg" width="160" height="160" viewBox="0 0 110 110"></svg><div class="donut-center"><div class="donut-center-row"><div class="donut-center-val" id="donut-month-total-cad">—</div><div class="donut-center-val" style="font-size:13px;color:var(--teal-light);" id="donut-month-total-eur">—</div></div><div class="donut-center-lbl">Total</div></div></div>
+            <div class="donut-legend" id="donut-month-legend" style="width:100%;"></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 12px 10px 8px;gap:8px;">
+            <div style="display:flex;align-items:center;gap:6px;align-self:flex-start;"><div style="width:8px;height:8px;border-radius:50%;background:var(--teal-light);"></div><span style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--teal-light);">Year to Date</span></div>
+            <div class="donut-wrap"><svg id="donut-ytd-svg" width="160" height="160" viewBox="0 0 110 110"></svg><div class="donut-center"><div class="donut-center-row"><div class="donut-center-val" id="donut-ytd-total-cad">—</div><div class="donut-center-val" style="font-size:13px;color:var(--teal-light);" id="donut-ytd-total-eur">—</div></div><div class="donut-center-lbl">Total</div></div></div>
+            <div class="donut-legend" id="donut-ytd-legend" style="width:100%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="panel-hdr"><div class="panel-title"><i class="ti ti-flame"></i> Hottest Brands</div></div>
+        <div class="chart-body" style="flex-direction:row;gap:0;padding:0;">
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;padding:8px 6px 8px 10px;gap:6px;border-right:2px solid var(--border2);">
+            <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#fff;">This Month · CAD</span>
+            <div class="bar-list" id="bar-month-cad"></div>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;padding:8px 6px;gap:6px;border-right:2px solid var(--border2);">
+            <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--orange);">This Month · EUR</span>
+            <div class="bar-list" id="bar-month-eur"></div>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;padding:8px 6px;gap:6px;border-right:2px solid var(--border2);">
+            <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#fff;">YTD · CAD</span>
+            <div class="bar-list" id="bar-ytd-cad"></div>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;padding:8px 10px 8px 6px;gap:6px;">
+            <span style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--orange);">YTD · EUR</span>
+            <div class="bar-list" id="bar-ytd-eur"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="feed-card">
+      <div class="panel-hdr" style="border-bottom:2px solid rgba(255,255,255,0.2);">
+        <div class="panel-title"><i class="ti ti-bolt"></i> Live Deal Feed</div>
+        <div class="panel-badge" id="feed-count">0 deals</div>
+      </div>
+      <div class="feed-thead">
+        <div class="feed-th"></div><div class="feed-th">Rep</div><div class="feed-th">Service</div>
+        <div class="feed-th">Brand / Note</div><div class="feed-th">Territory</div>
+        <div class="feed-th" style="text-align:right">Revenue</div>
+      </div>
+      <div class="feed-scroll" id="feed-scroll"><div class="feed-scroll-inner" id="feed-inner"></div></div>
+    </div>
+    <div class="lb-card">
+      <div class="panel-hdr"><div class="panel-title"><i class="ti ti-podium"></i> Leaderboard</div></div>
+      <div class="lb-body">
+        <div class="lb-block">
+          <div class="lb-block-title"><i class="ti ti-calendar-month" style="font-size:14px;color:#fff"></i><span class="lb-block-lbl" style="color:#fff;font-weight:700;text-transform:uppercase;letter-spacing:.7px;">This Month</span></div>
+          <div class="lb-cols three-col">
+            <div class="lb-col"><div class="lb-col-hdr"><i class="ti ti-hash" style="font-size:12px;color:var(--text3)"></i><span class="lb-col-lbl">Deals</span></div><div class="lb-rows" id="board-qty"></div></div>
+            <div class="lb-col"><div class="lb-col-hdr"><i class="ti ti-currency-dollar" style="font-size:12px;color:var(--text3)"></i><span class="lb-col-lbl">CAD</span></div><div class="lb-rows" id="board-rev-cad"></div></div>
+            <div class="lb-col"><div class="lb-col-hdr"><i class="ti ti-currency-euro" style="font-size:12px;color:var(--text3)"></i><span class="lb-col-lbl">EUR</span></div><div class="lb-rows" id="board-rev-eur"></div></div>
+          </div>
+        </div>
+        <div class="lb-block">
+          <div class="lb-block-title"><i class="ti ti-calendar-stats" style="font-size:14px;color:var(--teal-light)"></i><span class="lb-block-lbl teal">Year to Date</span></div>
+          <div class="lb-cols three-col">
+            <div class="lb-col"><div class="lb-col-hdr"><i class="ti ti-hash" style="font-size:12px;color:var(--text3)"></i><span class="lb-col-lbl">Deals</span></div><div class="lb-rows" id="ytd-qty"></div></div>
+            <div class="lb-col"><div class="lb-col-hdr"><i class="ti ti-currency-dollar" style="font-size:12px;color:var(--text3)"></i><span class="lb-col-lbl">CAD</span></div><div class="lb-rows" id="ytd-rev-cad"></div></div>
+            <div class="lb-col"><div class="lb-col-hdr"><i class="ti ti-currency-euro" style="font-size:12px;color:var(--text3)"></i><span class="lb-col-lbl">EUR</span></div><div class="lb-rows" id="ytd-rev-eur"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONFIG — adapted to the Data Center 2027-2028 sheet structure
+// ═══════════════════════════════════════════════════════════════
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbz2XpV-7k-ntzYSzYcUdHJyKq0fuguu20WafBGRKlRW4X6wWes4coEA-2RcMctIBLrz/exec';
+const BLITZ_LOGO_URL = 'https://assets.cdn.filesafe.space/2MyjO8xAUBH41ulVPIgd/media/6a2c16c716651db7bff9f26a.png';
+const REFRESH_INTERVAL = 30;
+const MONTHLY_TARGET = 25;
+const FRANCHISE_SVC = ['franchise sale','franchise sales'];
+const MONTHS = ['September 2026','October 2026','November 2026','December 2026',
+                'January 2027','February 2027','March 2027','April 2027','May 2027',
+                'June 2027','July 2027','August 2027'];
+const SVC_COLORS = {'Franchise Sale':'#FFE500','Consultation':'#4ea8de','Consulting':'#4ea8de','RSF':'#9b7be8','Incorporation':'#1BC700','Retainer':'#FF0000','Other':'#aecacd'};
+const BAR_COLORS = ['#f5c518','#4ea8de','#9b7be8','#43d98c','#00ccff','#aecacd','#e8b84b','#1dbc8a'];
+
+// Brand colours are auto-generated (cycled) and paired with the logo URL
+// pulled live from Listes → Brand Logo. Nothing to hardcode here anymore.
+const BRAND_PALETTE = ['#f4919a','#8ec63f','#ab3630','#e01813','#fff374','#ba9863','#ffcc34','#0091d5',
+                        '#0067b1','#5d9644','#b72d2b','#b7332a','#ffb835','#1f7fc0','#d14b42','#00a9a7',
+                        '#512772','#99d9d9','#ff8f4d','#7fd1ae','#c084fc','#f472b6','#38bdf8','#fbbf24',
+                        '#34d399','#a78bfa','#fb7185','#22d3ee','#facc15'];
+let BRAND_CONFIG = {};
+
+function hexToRgba(hex, alpha){
+  hex = hex.replace('#','');
+  const r=parseInt(hex.substring(0,2),16), g=parseInt(hex.substring(2,4),16), b=parseInt(hex.substring(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+function buildBrandConfig(brandsFromSheet){
+  const cfg={};
+  (brandsFromSheet||[]).forEach((b,i)=>{
+    let color = BRAND_PALETTE[i % BRAND_PALETTE.length];
+    if(b.color){
+      const hex = b.color.trim().replace(/^#/,'');
+      if(/^[0-9a-fA-F]{6}$/.test(hex)) color = '#'+hex;
+    }
+    cfg[b.name] = { color, bg: hexToRgba(color,0.15), glow: hexToRgba(color,0.5), logo: b.logo || '' };
+  });
+  return cfg;
+}
+function findBrandConfig(brandName){
+  if(!brandName) return null;
+  const lower = brandName.toLowerCase();
+  const entry = Object.entries(BRAND_CONFIG).find(([key])=>lower.includes(key.toLowerCase()));
+  return entry ? entry[1] : null;
+}
+
+const AV_STYLES=[{bg:'#00ccff',tx:'#00323f'},{bg:'#10a0c4',tx:'#eaf9ff'},{bg:'#a9d9e6',tx:'#00323f'},{bg:'#5DCAA5',tx:'#042f34'},{bg:'#7F77DD',tx:'#fff'},{bg:'#e8b84b',tx:'#3d2a00'},{bg:'#0f8c6b',tx:'#fff'},{bg:'#d3ddde',tx:'#0a2325'}];
+const MEDALS=['🥇','🥈','🥉'];
+
+let allData=[], filteredData=[], franchiseData=[], consultGigData=[], consultRevData=[];
+let repMap={}, repIdx=0, countdown=REFRESH_INTERVAL, prevFranchiseCount=0;
+let ALL_REPS=[]; // [{name, division}] from Listes — the full roster, used to seed the leaderboard
+let selectedMonth='ALL';
+document.getElementById('month-select').value='ALL';
+if(BLITZ_LOGO_URL){
+  const l=document.getElementById('blitz-logo'); l.src=BLITZ_LOGO_URL; l.style.display='block';
+  const ll=document.getElementById('loading-logo'); ll.src=BLITZ_LOGO_URL; ll.style.display='block';
+}
+
+function onMonthChange(){ selectedMonth=document.getElementById('month-select').value; applyFilters(); renderAll(); }
+function av(n){ if(!repMap[n]) repMap[n]=AV_STYLES[repIdx++%AV_STYLES.length]; return repMap[n]; }
+function ini(n){ return (n||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase(); }
+function symbolFor(currency){ return currency==='EUR' ? '€' : '$'; }
+function fmt(v, currency){
+  const n=Number(v); const sym=symbolFor(currency);
+  if(isNaN(n)||n===0) return sym+'0';
+  const num = n.toLocaleString('en-CA',{minimumFractionDigits:0,maximumFractionDigits:0});
+  return currency==='EUR' ? num+' '+sym : sym+num;
+}
+function fmtK(v, currency){
+  const n=Number(v); const sym=symbolFor(currency);
+  if(isNaN(n)||n===0) return sym+'0';
+  let out;
+  if(n>=1000000) out=(n/1000000).toFixed(1)+'M';
+  else if(n>=1000) out=Math.round(n/1000)+'K';
+  else out=String(n);
+  return currency==='EUR' ? out+' '+sym : sym+out;
+}
+function gf(d,...keys){ for(const k of keys){ if(d[k]!==undefined&&d[k]!==null&&d[k]!=='') return d[k]; } return ''; }
+function matchSvc(d,list){ const s=(gf(d,'service','Service')||'').toLowerCase().trim(); return s&&list.some(x=>s.includes(x)); }
+function rowType(d){ return (gf(d,'type','Type')||'').toLowerCase().trim(); }
+function isSalesRow(d){ return rowType(d)==='sales'; }
+function isConsultGig(d){ return rowType(d)==='consultinggig'; }
+function isConsultRev(d){ return rowType(d)==='consultingrevenue'; }
+function isConsultingRow(d){ return isConsultGig(d)||isConsultRev(d); }
+function isRetainer(d){ return rowType(d)==='retainer'; }
+function isFeedEligible(d){
+  // Consulting gigs only belong in the live feed when their mandate is a Consultation.
+  if(isConsultGig(d)) return (gf(d,'service','Service')||'').toLowerCase().trim()==='consultation';
+  // A Sales-table row with Service="Consultation" is NOT a mandate — keep those out of
+  // the feed entirely so only genuine New Mandate table entries show as consulting deals.
+  if(isSalesRow(d) && (gf(d,'service','Service')||'').toLowerCase().trim()==='consultation') return false;
+  return true;
+}
+function curMonthIdx(){
+  const now=new Date();
+  return MONTHS.findIndex(m=>{
+    const [name,year]=m.split(' ');
+    return now.getFullYear()===parseInt(year) && now.toLocaleString('en-US',{month:'long'})===name;
+  });
+}
+
+function svcGroup(d){
+  if(isConsultGig(d)||isConsultRev(d)) return 'Consulting';
+  if(isRetainer(d)) return 'Retainer';
+  const s=(gf(d,'service','Service')||'').toLowerCase();
+  if(s.includes('franchise sale')) return 'Franchise Sale';
+  if(s.includes('consultation')) return 'Consultation';
+  if(s.includes('remaining')||s.includes('success fee')||s==='rsf') return 'RSF';
+  if(s.includes('incorpor')) return 'Incorporation';
+  return 'Other';
+}
+function svcType(d){
+  if(isConsultGig(d)||isConsultRev(d)) return 'consult';
+  const s=(gf(d,'service','Service')||'').toLowerCase();
+  if(s.includes('franchise sale')) return 'sale';
+  if(s.includes('remaining')||s.includes('success fee')) return 'rsf';
+  if(s.includes('incorpor')) return 'inc';
+  return 'sale';
+}
+function parseRev(d){
+  const raw=gf(d,'montant','Revenue','revenue');
+  if(raw===''||raw===null||raw===undefined) return 0;
+  if(typeof raw==='number') return raw;
+  return parseFloat(String(raw).replace(/\s/g,'').replace(',','.'))||0;
+}
+function currencyOf(d){ return gf(d,'currency')==='EUR' ? 'EUR' : 'CAD'; }
+
+function applyFilters(){
+  let f=allData;
+  if(selectedMonth!=='ALL'){ f=allData.filter(d=>(gf(d,'mois','Mois')||'')===selectedMonth); }
+  filteredData   = f.filter(d=>parseRev(d)>0);
+  franchiseData  = filteredData.filter(d=>isSalesRow(d) && matchSvc(d,FRANCHISE_SVC));
+  consultGigData = filteredData.filter(d=>isConsultGig(d));
+  consultRevData = filteredData.filter(d=>isConsultRev(d));
+}
+
+function ytdData(){
+  const maxIdx = curMonthIdx()>=0 ? curMonthIdx() : MONTHS.length-1;
+  return allData.filter(d=>{ const mIdx=MONTHS.indexOf(gf(d,'mois','Mois')); return parseRev(d)>0 && mIdx>=0 && mIdx<=maxIdx; });
+}
+
+// Sums are kept separate by currency — a rep/brand can have both CAD and EUR totals
+function statsFromRows(rows, seedReps){
+  const m={};
+  if(seedReps) seedReps.forEach(name=>{ if(!m[name]) m[name]={name,qty:0,revCAD:0,revEUR:0}; });
+  rows.forEach(d=>{
+    if(isConsultRev(d)||isRetainer(d)) return;
+    const rep=gf(d,'rep','Rep Name')||'Unknown';
+    const amt=parseRev(d); const cur=currencyOf(d);
+    if(!m[rep]) m[rep]={name:rep,qty:0,revCAD:0,revEUR:0};
+    if(isSalesRow(d) && matchSvc(d,FRANCHISE_SVC)) m[rep].qty++;
+    if(isConsultGig(d)) m[rep].qty++;
+    if(isSalesRow(d)){ if(cur==='EUR') m[rep].revEUR+=amt; else m[rep].revCAD+=amt; }
+  });
+  rows.filter(d=>isConsultRev(d)).forEach(d=>{
+    const rep=gf(d,'rep','Rep Name')||'Unknown'; const cur=currencyOf(d);
+    if(!m[rep]) m[rep]={name:rep,qty:0,revCAD:0,revEUR:0};
+    if(cur==='EUR') m[rep].revEUR+=parseRev(d); else m[rep].revCAD+=parseRev(d);
+  });
+  return Object.values(m).filter(r=>r.name!=='Unknown');
+}
+
+function allRepNames(){
+  const s=new Set(ALL_REPS.map(r=>r.name));
+  allData.forEach(d=>{ const r=gf(d,'rep','Rep Name'); if(r&&r.trim()&&r!=='Unknown'&&r!=='Retainer') s.add(r); });
+  return [...s];
+}
+function repDivisionMap(){
+  // Prefer the authoritative division from the Listes roster; fall back to inferring
+  // from a rep's own Sales/Retainer rows for anyone not found there.
+  const map={};
+  ALL_REPS.forEach(r=>{ map[r.name]=(r.division||'').toLowerCase().trim(); });
+  allData.forEach(d=>{
+    const rep=gf(d,'rep','Rep Name'); if(!rep||rep==='Retainer'||map[rep]) return;
+    const div=(gf(d,'division','Blitz Division')||'').toLowerCase().trim();
+    if(div) map[rep]=div;
+  });
+  return map;
+}
+function isIrelandRep(rep, divMap){ return divMap[rep]==='ireland'; }
+
+function renderMetrics(){
+  const cnt=franchiseData.length;
+  const revCAD = filteredData.filter(d=>!isConsultGig(d)&&currencyOf(d)==='CAD').reduce((a,d)=>a+parseRev(d),0);
+  const revEUR = filteredData.filter(d=>!isConsultGig(d)&&currencyOf(d)==='EUR').reduce((a,d)=>a+parseRev(d),0);
+  const pct=Math.min(100,Math.round(cnt/MONTHLY_TARGET*100));
+  const lbl=selectedMonth==='ALL'?'all months':selectedMonth;
+  document.getElementById('m-deals').textContent=cnt;
+  document.getElementById('m-deals-sub').textContent=lbl;
+
+  // On "All Months" the Objective/Completion gauge don't make sense (no single-month
+  // target to track), so swap them out for a CAD/EUR breakdown of deals closed instead.
+  const isAll = selectedMonth==='ALL';
+  document.getElementById('card-objective').style.display = isAll ? 'none' : 'flex';
+  document.getElementById('card-completion').style.display = isAll ? 'none' : 'flex';
+  document.getElementById('card-deals-cad').style.display = isAll ? 'flex' : 'none';
+  document.getElementById('card-deals-eur').style.display = isAll ? 'flex' : 'none';
+  if(isAll){
+    document.getElementById('m-deals-cad').textContent = franchiseData.filter(d=>currencyOf(d)==='CAD').length;
+    document.getElementById('m-deals-eur').textContent = franchiseData.filter(d=>currencyOf(d)==='EUR').length;
+  } else {
+    document.getElementById('m-obj').textContent=MONTHLY_TARGET;
+    document.getElementById('m-obj-sub').textContent=pct+'% of target';
+    const gc=document.getElementById('gauge-circle');
+    if(gc){ gc.style.strokeDashoffset=201.1-(pct/100*201.1); gc.setAttribute('stroke',pct>=100?'#1dbc8a':pct>=70?'#f5c518':'#fff'); }
+    const gp=document.getElementById('gauge-pct'); if(gp) gp.textContent=pct+'%';
+  }
+
+  document.getElementById('m-consult').textContent=consultGigData.length;
+  document.getElementById('m-consult-sub').textContent=lbl;
+  document.getElementById('m-rev-cad').textContent=fmtK(revCAD,'CAD');
+  document.getElementById('m-rev-cad-sub').textContent=lbl;
+  document.getElementById('m-rev-eur').textContent=fmtK(revEUR,'EUR');
+  document.getElementById('m-rev-eur-sub').textContent=lbl;
+  const now=new Date(); document.getElementById('last-update-time').textContent=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+}
+
+// ── Live feed: JS-driven auto-scroll, pauses + allows manual scroll on hover ──
+let feedAutoScroll={paused:false, raf:null, lastTs:null};
+function startFeedAutoScroll(durationSec){
+  const el=document.getElementById('feed-scroll');
+  if(feedAutoScroll.raf) cancelAnimationFrame(feedAutoScroll.raf);
+  feedAutoScroll.lastTs=null;
+  const half = el.scrollHeight/2;
+  if(half<=0) return;
+  const speed = half/durationSec; // px per second
+  function step(ts){
+    if(feedAutoScroll.lastTs===null) feedAutoScroll.lastTs=ts;
+    const dt=(ts-feedAutoScroll.lastTs)/1000;
+    feedAutoScroll.lastTs=ts;
+    if(!feedAutoScroll.paused){
+      el.scrollTop += speed*dt;
+      if(el.scrollTop>=half) el.scrollTop-=half;
+    }
+    feedAutoScroll.raf=requestAnimationFrame(step);
+  }
+  feedAutoScroll.raf=requestAnimationFrame(step);
+}
+(function setupFeedHover(){
+  const el=document.getElementById('feed-scroll');
+  el.addEventListener('mouseenter',()=>feedAutoScroll.paused=true);
+  el.addEventListener('mouseleave',()=>feedAutoScroll.paused=false);
+})();
+
+function renderFeed(){
+  let feedData = filteredData.filter(d=>!isConsultRev(d)&&!isRetainer(d)&&isFeedEligible(d));
+  if(feedData.length < 15 && selectedMonth !== 'ALL'){
+    const selIdx = MONTHS.indexOf(selectedMonth);
+    const extras = [];
+    for(let mIdx = selIdx - 1; mIdx >= 0 && feedData.length + extras.length < 15; mIdx--){
+      const mName = MONTHS[mIdx];
+      const mDeals = allData.filter(d=>!isConsultRev(d)&&!isRetainer(d)&&isFeedEligible(d)&&parseRev(d)>0&&(gf(d,'mois','Mois')||'')===mName);
+      extras.push(...mDeals);
+    }
+    feedData = [...feedData, ...extras].slice(0, 15);
+  }
+  document.getElementById('feed-count').textContent=feedData.length+' deals';
+  const iconMap={sale:'ti-bolt',consult:'ti-file-description',rsf:'ti-star',inc:'ti-pencil'};
+  const colorMap={sale:'var(--c-sale)',consult:'var(--c-consult)',rsf:'var(--c-rsf)',inc:'var(--c-inc)'};
+  const svcLabelMap={sale:'Franchise Sale',consult:'Consulting',rsf:'RSF',inc:'Incorporation'};
+  function rowsHTML(first){
+    return feedData.map((d,i)=>{
+      const rep  = gf(d,'rep','Rep Name')||'—';
+      const amt  = parseRev(d); const cur=currencyOf(d);
+      const brand= gf(d,'brand','Brand')||'';
+      const notes= gf(d,'notes','Notes')||'';
+      const terr = gf(d,'territoire','Territory')||gf(d,'division','Blitz Division')||'—';
+      const type = svcType(d);
+      const svcDisplay = isConsultGig(d) ? (gf(d,'service','Service')||'Consulting') : svcLabelMap[type]||'Sale';
+      const brandDisplay = isConsultGig(d) ? (brand||notes||'—') : (brand||'—');
+      const bc = findBrandConfig(brand);
+      const rowStyle = bc ? `border-left-color:${bc.color};background:${bc.bg};` : '';
+      const amtStyle = bc ? `color:${bc.color};` : '';
+      const iconCell = (bc && bc.logo)
+        ? `<div style="width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:${bc.bg};border-radius:10px;border:1px solid ${bc.color}44;"><img src="${bc.logo}" style="width:46px;height:46px;object-fit:contain;" alt=""></div>`
+        : `<div style="width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border-radius:10px;border:1px solid rgba(255,255,255,0.08);"><i class="ti ${iconMap[type]}" style="color:${colorMap[type]};font-size:28px;"></i></div>`;
+      const svcStyle = bc ? `color:${bc.color};` : '';
+      return `<div class="feed-row type-${type}${first&&i===0?' new-row':''}" style="${rowStyle}">${iconCell}<div class="feed-rep">${rep}</div><div class="feed-svc ${type}" style="${svcStyle}">${svcDisplay}</div><div class="feed-cell">${brandDisplay}</div><div class="feed-cell">${terr}</div><div class="feed-amt ${type}" style="${amtStyle}">${fmt(amt,cur)}</div></div>`;
+    }).join('');
+  }
+  document.getElementById('feed-inner').innerHTML=rowsHTML(true)+rowsHTML(false);
+  startFeedAutoScroll(Math.min(120,Math.max(15,feedData.length*2.8)));
+}
+
+function drawDonut(svgId,totalCadId,totalEurId,legendId,rows){
+  // Split by currency so a CAD $12K slice and an EUR €3K slice never get summed together
+  const groupsCAD={}, groupsEUR={};
+  rows.filter(d=>!isConsultGig(d)).forEach(d=>{
+    const g=svcGroup(d), amt=parseRev(d); if(amt<=0) return;
+    const bucket = currencyOf(d)==='EUR' ? groupsEUR : groupsCAD;
+    bucket[g]=(bucket[g]||0)+amt;
+  });
+  const totalCAD=Object.values(groupsCAD).reduce((a,v)=>a+v,0);
+  const totalEUR=Object.values(groupsEUR).reduce((a,v)=>a+v,0);
+  document.getElementById(totalCadId).textContent=fmtK(totalCAD,'CAD');
+  document.getElementById(totalEurId).textContent=fmtK(totalEUR,'EUR');
+  if(!totalCAD && !totalEUR){document.getElementById(svgId).innerHTML='';document.getElementById(legendId).innerHTML='<div class="empty-msg">No data</div>';return;}
+  // Pie wedges are drawn from whichever currency has the larger total (visual only —
+  // the legend below still gives CAD and EUR their own row, equally, per service)
+  const wedgeSource = totalCAD>=totalEUR ? groupsCAD : groupsEUR;
+  const wedgeTotal = Math.max(totalCAD,totalEUR);
+  const wedgeEntries = Object.entries(wedgeSource).sort((a,b)=>b[1]-a[1]);
+  const CX=55,CY=55,R=46,r=28,TAU=Math.PI*2; let angle=-Math.PI/2,paths='';
+  wedgeEntries.forEach(([name,val])=>{ const col=SVC_COLORS[name]||SVC_COLORS['Other']; const slice=(val/wedgeTotal)*TAU; const x1=CX+R*Math.cos(angle),y1=CY+R*Math.sin(angle); angle+=slice; const x2=CX+R*Math.cos(angle),y2=CY+R*Math.sin(angle); const ix1=CX+r*Math.cos(angle-slice),iy1=CY+r*Math.sin(angle-slice); const ix2=CX+r*Math.cos(angle),iy2=CY+r*Math.sin(angle); const large=slice>Math.PI?1:0; paths+=`<path d="M${x1},${y1} A${R},${R} 0 ${large},1 ${x2},${y2} L${ix2},${iy2} A${r},${r} 0 ${large},0 ${ix1},${iy1} Z" fill="${col}" opacity="0.92"/>`;});
+  document.getElementById(svgId).innerHTML=paths;
+
+  // Legend: one row per service, CAD and EUR shown as two side-by-side columns —
+  // never duplicated into separate rows.
+  const allServices = new Set([...Object.keys(groupsCAD), ...Object.keys(groupsEUR)]);
+  const order = [...allServices].sort((a,b)=>((groupsCAD[b]||0)+(groupsEUR[b]||0))-((groupsCAD[a]||0)+(groupsEUR[a]||0)));
+  document.getElementById(legendId).innerHTML = order.map(name=>{
+    const col=SVC_COLORS[name]||SVC_COLORS['Other'];
+    const cad=groupsCAD[name]||0, eur=groupsEUR[name]||0;
+    return `<div class="legend-row"><div class="legend-dot" style="background:${col}"></div><div class="legend-name">${name}</div><div class="legend-val">${fmtK(cad,'CAD')}</div><div class="legend-val" style="color:var(--teal-light);">${fmtK(eur,'EUR')}</div></div>`;
+  }).join('');
+}
+
+function allBrandNames(){
+  const s=new Set();
+  allData.forEach(d=>{ if(isConsultGig(d)||isConsultRev(d)) return; const b=gf(d,'brand','Brand')||''; if(b&&b!=='—') s.add(b); });
+  return [...s];
+}
+function drawBars(elId, rows, currency, max){
+  const totals={};
+  rows.forEach(d=>{
+    if(isConsultGig(d)||isConsultRev(d)) return;
+    if(currencyOf(d)!==currency) return;
+    const brand=gf(d,'brand','Brand')||''; if(!brand||brand==='—') return;
+    const amt=parseRev(d); if(amt<=0) return;
+    totals[brand]=(totals[brand]||0)+amt;
+  });
+  const sorted=Object.entries(totals).sort((a,b)=>b[1]-a[1]).slice(0,max||5);
+  document.getElementById(elId).innerHTML = sorted.length ? sorted.map(([brand,val],i)=>{
+    const bc=findBrandConfig(brand);
+    const dotCol=bc?bc.color:BAR_COLORS[i%BAR_COLORS.length];
+    return `<div class="bar-item"><div class="bar-item-hdr"><div style="display:flex;align-items:center;gap:5px;flex:1;min-width:0;"><div style="width:8px;height:8px;border-radius:50%;background:${dotCol};flex-shrink:0;"></div><div class="bar-brand" style="font-size:13px;">${brand}</div></div><div class="bar-val" style="color:${dotCol};font-size:13px;">${fmt(val,currency)}</div></div></div>`;
+  }).join('') : '<div class="empty-msg">No data</div>';
+}
+
+function renderLbCol(id,sorted,fmtFn,isUnits){
+  document.getElementById(id).innerHTML=sorted.map((r,i)=>{
+    const rankEl=i<3?`<span style="font-size:15px;line-height:1;width:18px;text-align:center;flex-shrink:0">${MEDALS[i]}</span>`:`<div style="width:18px;text-align:center;font-size:11px;color:var(--text3);flex-shrink:0;font-weight:700">${i+1}</div>`;
+    const valCls=i===0?(isUnits?'lb-val gold':'lb-val green'):'lb-val def';
+    const rankCls=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    return `<div class="lb-row ${rankCls}">${rankEl}<div class="lb-name">${r.name.split(' ')[0]}</div><div class="${valCls}">${fmtFn(r)}</div></div>`;
+  }).join('')||'<div class="empty-msg">No data</div>';
+}
+function renderBoards(){
+  const reps = allRepNames();
+  const divMap = repDivisionMap();
+  const s = statsFromRows(filteredData, reps);
+  renderLbCol('board-qty', [...s].sort((a,b)=>b.qty-a.qty), r=>r.qty+'', true);
+  renderLbCol('board-rev-cad', s.filter(r=>!isIrelandRep(r.name,divMap)).sort((a,b)=>b.revCAD-a.revCAD), r=>fmtK(r.revCAD,'CAD'), false);
+  renderLbCol('board-rev-eur', s.filter(r=>isIrelandRep(r.name,divMap)).sort((a,b)=>b.revEUR-a.revEUR), r=>fmtK(r.revEUR,'EUR'), false);
+  const ytd = statsFromRows(ytdData(), reps);
+  renderLbCol('ytd-qty', [...ytd].sort((a,b)=>b.qty-a.qty), r=>r.qty+'', true);
+  renderLbCol('ytd-rev-cad', ytd.filter(r=>!isIrelandRep(r.name,divMap)).sort((a,b)=>b.revCAD-a.revCAD), r=>fmtK(r.revCAD,'CAD'), false);
+  renderLbCol('ytd-rev-eur', ytd.filter(r=>isIrelandRep(r.name,divMap)).sort((a,b)=>b.revEUR-a.revEUR), r=>fmtK(r.revEUR,'EUR'), false);
+}
+
+function renderAll(){
+  renderMetrics();
+  renderFeed();
+  drawDonut('donut-month-svg','donut-month-total-cad','donut-month-total-eur','donut-month-legend',filteredData);
+  drawDonut('donut-ytd-svg','donut-ytd-total-cad','donut-ytd-total-eur','donut-ytd-legend',ytdData());
+  drawBars('bar-month-cad',filteredData,'CAD',5);
+  drawBars('bar-month-eur',filteredData,'EUR',5);
+  drawBars('bar-ytd-cad',ytdData(),'CAD',5);
+  drawBars('bar-ytd-eur',ytdData(),'EUR',5);
+  renderBoards();
+}
+
+function launchConfetti(){
+  const wrap=document.getElementById('confetti-wrap'); wrap.innerHTML='';
+  const cols=['#00ccff','#10a0c4','#a9d9e6','#7f77dd','#1dbc8a','#e8b84b','#fff'];
+  for(let i=0;i<80;i++){const el=document.createElement('div');el.className='confetti-piece';const sz=5+Math.random()*10;el.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2+Math.random()*3}s;animation-delay:${Math.random()*.8}s;`;wrap.appendChild(el);setTimeout(()=>el.remove(),(6+Math.random()*2)*1000);}
+}
+function showDealFlash(d){
+  const rep=gf(d,'rep','Rep Name')||'—',amt=parseRev(d),cur=currencyOf(d),brand=gf(d,'brand','Brand')||'',div=gf(d,'division','Blitz Division')||'';
+  const bc=findBrandConfig(brand);
+  document.getElementById('flash-rep').textContent=rep;
+  document.getElementById('flash-brand').textContent=brand;
+  document.getElementById('flash-amt').textContent=fmt(amt,cur);
+  document.getElementById('flash-div').textContent=div;
+  const logoEl=document.getElementById('flash-logo');
+  if(logoEl){ if(bc&&bc.logo){logoEl.src=bc.logo;logoEl.style.display='block';}else{logoEl.style.display='none';} }
+  const flashBg=document.querySelector('.deal-flash-bg');
+  const flashBorder=document.querySelector('.deal-flash-border');
+  const flashAmt=document.getElementById('flash-amt');
+  if(bc){
+    flashBg.style.background=`linear-gradient(135deg,${bc.bg} 0%,#001b22 50%,#000 100%)`;
+    flashBorder.style.borderColor=bc.color;
+    flashBorder.style.boxShadow=`inset 0 0 80px ${bc.glow},0 0 80px ${bc.glow}`;
+    if(flashAmt) flashAmt.style.color=bc.color;
+  } else {
+    flashBg.style.background='';flashBorder.style.borderColor='';flashBorder.style.boxShadow='';
+    if(flashAmt) flashAmt.style.color='';
+  }
+  const fl=document.getElementById('deal-flash');
+  fl.classList.add('show'); launchConfetti();
+  setTimeout(()=>{
+    fl.classList.remove('show');
+    flashBg.style.background='';flashBorder.style.borderColor='';flashBorder.style.boxShadow='';
+    if(flashAmt) flashAmt.style.color='';
+  },6000);
+}
+function dealKey(d){ return [gf(d,'mois','Mois'),gf(d,'rep','Rep Name'),gf(d,'montant','Revenue'),gf(d,'brand','Brand'),gf(d,'service','Service')].join('|'); }
+
+async function fetchData(){
+  try{
+    const res=await fetch(SHEETS_URL);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const raw=await res.json();
+    if(!raw || !Array.isArray(raw.deals)) throw new Error('Invalid format — expected {deals:[...], brands:[...]}');
+    BRAND_CONFIG = buildBrandConfig(raw.brands);
+    ALL_REPS = raw.reps || [];
+    allData=raw.deals.filter(d=>parseRev(d)>0);
+    if(prevFranchiseCount>0){
+      const oldKeys=new Set(allData.filter(d=>!isConsultingRow(d)&&!isRetainer(d)&&matchSvc(d,FRANCHISE_SVC)).map(dealKey));
+      const newF=allData.filter(d=>!isConsultingRow(d)&&!isRetainer(d)&&matchSvc(d,FRANCHISE_SVC));
+      const actuallyNew=newF.find(d=>!oldKeys.has(dealKey(d)));
+      if(actuallyNew) showDealFlash(actuallyNew);
+    }
+    selectedMonth=document.getElementById('month-select').value;
+    applyFilters();
+    prevFranchiseCount=franchiseData.length;
+    document.getElementById('overlay').style.display='none';
+    renderAll();
+  } catch(e){
+    console.error(e);
+    if(!allData.length) document.getElementById('loading-txt').innerHTML=`<div class="err-box">Unable to load data — ${e.message}</div>`;
+  }
+}
+
+function tickClocks(){
+  const fmt2 = n => String(n).padStart(2,'0');
+  const fmtTime = d => fmt2(d.getHours())+':'+fmt2(d.getMinutes())+':'+fmt2(d.getSeconds());
+  const fmtDate = d => d.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'});
+  const qc = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Toronto'}));
+  document.getElementById('clock-qc').textContent = fmtTime(qc);
+  document.getElementById('clock-qc-date').textContent = fmtDate(qc);
+  const to = new Date(new Date().toLocaleString('en-US',{timeZone:'America/Toronto'}));
+  document.getElementById('clock-to').textContent = fmtTime(to);
+  document.getElementById('clock-to-date').textContent = fmtDate(to);
+  const ie = new Date(new Date().toLocaleString('en-US',{timeZone:'Europe/Dublin'}));
+  document.getElementById('clock-ie').textContent = fmtTime(ie);
+  document.getElementById('clock-ie-date').textContent = fmtDate(ie);
+}
+tickClocks();
+setInterval(tickClocks, 1000);
+
+setInterval(()=>{ countdown--; if(countdown<=0){countdown=REFRESH_INTERVAL;fetchData();} document.getElementById('refresh-txt').textContent=`Refresh in ${countdown}s`; },1000);
+fetchData();
+
+// ── Scale to fill width always ──
+function scaleToFit(){
+  const W=1920, H=1080;
+  const vw=window.innerWidth, vh=window.innerHeight;
+  const scale=Math.max(vw/W,vh/H);
+  const offX=(vw-W*scale)/2;
+  document.body.style.cssText=`
+    width:${W}px !important;height:${H}px !important;overflow:hidden;position:fixed;
+    top:0px;left:${offX}px;transform:scale(${scale});transform-origin:top left;
+    background:var(--bg);font-family:'Barlow',system-ui,sans-serif;margin:0;padding:0;
+  `;
+  document.documentElement.style.cssText='background:#004759;overflow:hidden;width:100%;height:100%;margin:0;padding:0;';
+}
+scaleToFit();
+window.addEventListener('resize', scaleToFit);
+</script>
+</body>
+</html>
